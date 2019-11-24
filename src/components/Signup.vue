@@ -32,39 +32,39 @@
 export default {
   name: 'Signup',
   methods: {
-    signIn(e) {
+    signIn (e) {
       // TODO: Validate input
       // TODO: save name/classroom
-      if(!this.validateInput(e)) return;
-      this.$router.push({ name: 'questions', params: { classroom: this.classroom }, query: { username: this.username } }) 
+      if (!this.validateInput(e)) return
+      this.$router.push({ name: 'questions', params: { classroom: this.classroom }, query: { username: this.username } })
     },
-    showUser() {
+    showUser () {
       if (this.username !== '' && this.username !== null) {
-        return "Hello " + this.username + "!";
+        return 'Hello ' + this.username + '!'
       }
-      return '';
+      return ''
     },
     // TODO: validate the input
-    validateInput(e) {
+    validateInput (e) {
       if (this.username && this.classroom) {
-        return true;
+        return true
       }
 
-      this.errors = [];
+      this.errors = []
 
       if (!this.name) {
-        this.errors.push("Please input your name!");
+        this.errors.push('Please input your name!')
       }
 
       if (!this.classroom) {
-        this.errors.push("Please select a classroom!");
+        this.errors.push('Please select a classroom!')
       }
 
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   },
-  data() {
+  data () {
     return {
       username: '',
       classroom: '',
@@ -83,6 +83,7 @@ export default {
     padding: 10px 18px;
     font-size: 18px;
     margin-bottom: 16px;
+    border-radius: 5px;
   }
   .select-input {
     width: 20%;
@@ -99,14 +100,14 @@ export default {
     color: red;
   }
   .button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  border-radius: 5px;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
+    background-color: #4CAF50; /* Green */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
 </style>

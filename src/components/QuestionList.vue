@@ -22,8 +22,7 @@
 export default {
   name: 'QuestionList',
   methods: {
-    addQuestion() {
-
+    addQuestion () {
       // TODO: get ID from database
       // TODO: order by upvotes
       // TODO: display timestamp
@@ -40,36 +39,36 @@ export default {
 
     // function to create a better timestamp visualizer for humans
     // e.g. 2 minutes ago, 2 days ago, etc.
-    timeSince(date) {
+    timeSince (date) {
       if (typeof date !== 'object') {
-        date = new Date(date);
+        date = new Date(date)
       }
 
-      var seconds = Math.floor((new Date() - date) / 1000);
-      var intervalType;
+      var seconds = Math.floor((new Date() - date) / 1000)
+      var intervalType
 
-      var interval = Math.floor(seconds / 31536000);
+      var interval = Math.floor(seconds / 31536000)
       if (interval >= 1) {
-        intervalType = 'year';
+        intervalType = 'year'
       } else {
-        interval = Math.floor(seconds / 2592000);
+        interval = Math.floor(seconds / 2592000)
         if (interval >= 1) {
-          intervalType = 'month';
+          intervalType = 'month'
         } else {
-          interval = Math.floor(seconds / 86400);
+          interval = Math.floor(seconds / 86400)
           if (interval >= 1) {
-            intervalType = 'day';
+            intervalType = 'day'
           } else {
-            interval = Math.floor(seconds / 3600);
+            interval = Math.floor(seconds / 3600)
             if (interval >= 1) {
-              intervalType = "hour";
+              intervalType = 'hour'
             } else {
-              interval = Math.floor(seconds / 60);
+              interval = Math.floor(seconds / 60)
               if (interval >= 1) {
-                intervalType = "minute";
+                intervalType = 'minute'
               } else {
-                interval = seconds;
-                intervalType = "second";
+                interval = seconds
+                intervalType = 'second'
               }
             }
           }
@@ -77,10 +76,10 @@ export default {
       }
 
       if (interval > 1 || interval === 0) {
-        intervalType += 's';
+        intervalType += 's'
       }
 
-      return interval + ' ' + intervalType + ' ago';
+      return interval + ' ' + intervalType + ' ago'
     }
   },
   // TODO: created fetch classroom questions
@@ -88,22 +87,22 @@ export default {
     classroom: String,
     author: String
   },
-  data() {
+  data () {
     return {
       newQuestion: '',
       questions: [
         {
           'id': 1,
           'question': "What's your favorite part of being a software engineer?",
-          'timestamp': "2019-11-09T10:43:23Z",
-          'author': "Andrew T.",
-          'classroom': "taeoalii"
-        },{
+          'timestamp': '2019-11-09T10:43:23Z',
+          'author': 'Andrew T.',
+          'classroom': 'taeoalii'
+        }, {
           'id': 2,
           'question': "What would you do if you weren't a software engineer?",
-          'timestamp': "2019-08-09T10:43:23Z",
-          'author': "Johnny X.",
-          'classroom': "taeoalii"
+          'timestamp': '2019-08-09T10:43:23Z',
+          'author': 'Johnny X.',
+          'classroom': 'taeoalii'
         }
       ]
     }
@@ -117,6 +116,7 @@ export default {
     padding: 10px 18px;
     font-size: 18px;
     margin-bottom: 16px;
+  border-radius: 5px;
   }
   .question-item {
     text-align: right;

@@ -11,13 +11,13 @@ import QuestionList from '@/components/QuestionList.vue'
 
 export default {
   name: 'questions',
-  data() {
+  data () {
     return {
       classroom: this.$route.params.classroom,
       username: this.$route.query.username
     }
   },
-  created() {
+  created () {
     if (!this.username || !this.classroom) {
       this.$route.push({name: 'home'})
     }
