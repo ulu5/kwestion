@@ -90,7 +90,21 @@ export default {
     padding: 10px 18px;
     font-size: 18px;
     margin-bottom: 16px;
+    border: 1px solid #ccc;
+    overflow: hidden;
   }
+  .select-input select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+  }
+  .select-input select:focus {
+    outline: none;
+}
   .errors {
     width: 20%;
     padding: 10px 18px;
