@@ -8,7 +8,12 @@
       </div>
 
 {{ timeSince(question.timestamp) }}
+    <div class="question-author">
+<b>
 {{ question.author }}
+</b>
+    </div>
+
     </div>
   </div>
 </template>
@@ -33,6 +38,8 @@ export default {
       this.newQuestion = ''
     },
 
+    // function to create a better timestamp visualizer for humans
+    // e.g. 2 minutes ago, 2 days ago, etc.
     timeSince(date) {
       if (typeof date !== 'object') {
         date = new Date(date);
@@ -78,17 +85,17 @@ export default {
   },
   // TODO: created fetch classroom questions
   props: {
-    classroom: String
+    classroom: String,
+    author: String
   },
   data() {
     return {
-      author: 'Andrew T.',
       newQuestion: '',
       questions: [
         {
           'id': 1,
           'question': "What's your favorite part of being a software engineer?",
-          'timestamp': "2019-09-09T10:43:23Z",
+          'timestamp': "2019-11-09T10:43:23Z",
           'author': "Andrew T.",
           'classroom': "taeoalii"
         },{
@@ -117,6 +124,7 @@ export default {
     font-size: 18px;
     margin-bottom: 16px;
     border: 1px solid darkslategray;
+    border-radius: 5px;
     padding: 5px 18px;
     margin: 5px;
   }

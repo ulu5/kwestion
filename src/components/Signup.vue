@@ -3,9 +3,9 @@
 
     <h1> {{msg}} </h1>
     <form @submit="validateInput">
-      <input type="text" placeholder="Name" v-model="username" />
+      <input class="name-input" type="text" placeholder="Name" v-model="username" />
       <br />
-      <select required v-model="classroom">
+      <select class="select-input" required v-model="classroom">
         <option disabled selected value> -- select a class -- </option>
         <option value="Taeoalii">Taeoalii</option>
         <option value="Richards">Richards</option>
@@ -14,11 +14,14 @@
         <option value="Nakatsu">Nakatsu</option>
       </select>
       <br />
-      <input type="submit" value="Sign In" v-on:click="signIn" />
+      <input class="button" type="submit" value="Sign In" v-on:click="signIn" />
     </form>
     <p>
       {{this.showUser()}}
     </p>
+    <div v-for="error in errors" v-bind:key="error" class="errors">
+      {{error}}
+    </div>
   </div>
 </template>
 
@@ -29,10 +32,11 @@
 export default {
   name: 'Signup',
   methods: {
-    signIn() {
+    signIn(e) {
       // TODO: Validate input
       // TODO: save name/classroom
-      this.$router.push({ name: 'questions', params: { classroom: this.classroom } }) 
+      if(!this.validateInput(e)) return;
+      this.$router.push({ name: 'questions', params: { classroom: this.classroom }, query: { username: this.username } }) 
     },
     showUser() {
       if (this.username !== '' && this.username !== null) {
@@ -40,6 +44,7 @@ export default {
       }
       return '';
     },
+    // TODO: validate the input
     validateInput(e) {
       if (this.username && this.classroom) {
         return true;
@@ -56,12 +61,14 @@ export default {
       }
 
       e.preventDefault();
+      return false;
     }
   },
   data() {
     return {
       username: '',
-      classroom: ''
+      classroom: '',
+      errors: []
     }
   },
   props: {
@@ -69,3 +76,37 @@ export default {
   }
 }
 </script>
+
+<style>
+  .name-input {
+    width: 20%;
+    padding: 10px 18px;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .select-input {
+    width: 20%;
+    padding: 10px 18px;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .errors {
+    width: 20%;
+    padding: 10px 18px;
+    font-size: 18px;
+    margin-bottom: 16px;
+    text-align: center;
+    color: red;
+  }
+  .button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
