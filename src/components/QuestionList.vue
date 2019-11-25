@@ -17,7 +17,7 @@
         </td>
         <td class="question-vote">
           <button @click="upvote(question.id)" class="upvote-button">
-            <img src="@/assets/upvote.png" height="25px" :id="'upvote_' + question.id" :ref="'upvote_' + question.id" />
+            <img class="upvote-img" @load="setBg(question.id, $event)" src="@/assets/upvote.png" height="25px" :id="'upvote_' + question.id" :ref="'upvote_' + question.id" />
           </button>
           <p class="vote-count">{{ question.votes }}</p>
         </td>
@@ -35,8 +35,9 @@ export default {
       // TODO: get ID from database
       // TODO: order by upvotes
       // TODO: display timestamp
+      var questionId = this.questions.length + 1
       this.questions.push({
-        id: this.questions.length + 1,
+        id: questionId,
         question: this.newQuestion,
         author: this.author,
         classroom: this.classroom,
@@ -44,7 +45,15 @@ export default {
         votes: 1
       })
 
+      this.votes.add(questionId)
       this.newQuestion = ''
+    },
+    setBg(questionId, event) {
+      if (this.votes.has(questionId)) {
+        event.target.style.backgroundColor = 'coral'
+      } else {
+        event.target.style.backgroundColor = 'transparent'
+      }
     },
     upvote (questionId) {
       // if voted for that question, then +1, else -1
@@ -53,12 +62,12 @@ export default {
         this.votes.delete(questionId)
         // TODO: change black
         console.log(this.$refs)
-        this.$refs['upvote_' + questionId][0].style.border = "0px";
+        this.$refs['upvote_' + questionId][0].style.backgroundColor = 'transparent'
       } else {
         this.questions[questionId - 1].votes += 1
         this.votes.add(questionId)
         // TODO: change to grayscale
-        this.$refs['upvote_' + questionId][0].style.border = "2px solid green";
+        this.$refs['upvote_' + questionId][0].style.backgroundColor = 'coral'
       }
     },
 
@@ -174,5 +183,8 @@ export default {
   }
   .upvote-button {
     border: 0px;
+  }
+  .upvote-img {
+    background-color: coral;
   }
 </style>
