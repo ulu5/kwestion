@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <signup msg="Welcome to Kwestion. Please sign in below."/>
+    <signup msg="Welcome to Kwestion, please sign in below."/>
   </div>
 </template>
 

@@ -2,19 +2,28 @@
   <div id="question-lister">
     <input type="text" class="question-input" placeholder="Ask a question..." v-model="newQuestion" @keyup.enter="addQuestion" />
     <h2>Current Questions</h2>
-    <div v-for="question in questions" :key="question.id" class="question-item">
-      <div class="question-text">
-{{ question.question }}
-      </div>
-
-{{ timeSince(question.timestamp) }}
-    <div class="question-author">
-<b>
-{{ question.author }}
-</b>
+    <table class="question-table">
+    <div v-for="question in questions" :key="question.id">
+      <tr>
+        <td class="question-box">
+          {{ question.question }}
+          <br>
+          <div class="question-time">
+            {{ timeSince(question.timestamp) }}
+          </div>
+          <div class="question-author">
+            {{ question.author }}
+          </div>
+        </td>
+        <td class="question-vote">
+          <button @click="upvote(question.id)" class="upvote-button">
+            <img src="@/assets/upvote.png" height="25px" :id="'upvote_' + question.id" :ref="'upvote_' + question.id" />
+          </button>
+          <p class="vote-count">{{ question.votes }}</p>
+        </td>
+      </tr>
     </div>
-
-    </div>
+    </table>
   </div>
 </template>
 
@@ -31,10 +40,26 @@ export default {
         question: this.newQuestion,
         author: this.author,
         classroom: this.classroom,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        votes: 1
       })
 
       this.newQuestion = ''
+    },
+    upvote (questionId) {
+      // if voted for that question, then +1, else -1
+      if (this.votes.has(questionId)) {
+        this.questions[questionId - 1].votes -= 1
+        this.votes.delete(questionId)
+        // TODO: change black
+        console.log(this.$refs)
+        this.$refs['upvote_' + questionId][0].style.border = "0px";
+      } else {
+        this.questions[questionId - 1].votes += 1
+        this.votes.add(questionId)
+        // TODO: change to grayscale
+        this.$refs['upvote_' + questionId][0].style.border = "2px solid green";
+      }
     },
 
     // function to create a better timestamp visualizer for humans
@@ -90,19 +115,22 @@ export default {
   data () {
     return {
       newQuestion: '',
+      votes: new Set(),
       questions: [
         {
           'id': 1,
           'question': "What's your favorite part of being a software engineer?",
           'timestamp': '2019-11-09T10:43:23Z',
           'author': 'Andrew T.',
-          'classroom': 'taeoalii'
+          'classroom': 'taeoalii',
+          'votes': 12
         }, {
           'id': 2,
           'question': "What would you do if you weren't a software engineer?",
           'timestamp': '2019-08-09T10:43:23Z',
           'author': 'Johnny X.',
-          'classroom': 'taeoalii'
+          'classroom': 'taeoalii',
+          'votes': 5
         }
       ]
     }
@@ -116,25 +144,35 @@ export default {
     padding: 10px 18px;
     font-size: 18px;
     margin-bottom: 16px;
-  border-radius: 5px;
-  }
-  .question-item {
-    text-align: right;
-    width: 60%;
-    font-size: 18px;
-    margin-bottom: 16px;
-    border: 1px solid darkslategray;
     border-radius: 5px;
-    padding: 5px 18px;
-    margin: 5px;
   }
-  .question-text {
+  table, td, tr {
+    table-layout: fixed;
+    width: 100%;
     text-align: left;
-    font-size: 18px;
+  }
+  .question-time {
+    text-align: left;
+    float: left;
+    font-style: italic;
+    font-size: 14px;
   }
   .question-author {
-    text-align: right;
+    float: right;
+    font-style: italic;
     font-size: 14px;
-    color: darkslategray;
+  }
+  .question-vote {
+    text-align: center;
+    padding: 0px 40px;
+  }
+  .question-box {
+    font-size: 18px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0px 20px;
+  }
+  .upvote-button {
+    border: 0px;
   }
 </style>

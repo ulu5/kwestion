@@ -2,6 +2,9 @@
   <div id="formula">
 
     <h1> {{msg}} </h1>
+    <i>This app was created for demo purposes at Kapolei Elementary School.</i>
+    <br />
+    <br />
     <form @submit="validateInput">
       <input class="name-input" type="text" placeholder="Name" v-model="username" />
       <br />
