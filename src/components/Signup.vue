@@ -29,17 +29,16 @@
 </template>
 
 <script>
-// get all classrooms
-// click on one takes you to a classroom
 // store the username/classroom locally
 export default {
   name: 'Signup',
   methods: {
     signIn (e) {
-      // TODO: Validate input
-      // TODO: save name/classroom
       if (!this.validateInput(e)) return
-      this.$router.push({ name: 'questions', params: { classroom: this.classroom }, query: { username: this.username } })
+
+      // TODO: create user on the backend
+      // TODO: save in cookie
+      this.$router.push({ name: 'classrooms', params: { classroom: this.classroom }, query: { username: this.username } })
     },
     showUser () {
       if (this.username !== '' && this.username !== null) {
@@ -47,7 +46,6 @@ export default {
       }
       return ''
     },
-    // TODO: validate the input
     validateInput (e) {
       if (this.username && this.classroom) {
         return true
@@ -66,6 +64,9 @@ export default {
       e.preventDefault()
       return false
     }
+  },
+  created () {
+    // TODO: if cookies are set, redirect
   },
   data () {
     return {

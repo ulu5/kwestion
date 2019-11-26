@@ -1,6 +1,6 @@
 <template>
   <div class="question">
-    <h1>Welcome {{classroom}}'s Class! </h1>
+    <h1>Hello {{username}}, welcome to {{classroom}}'s class questions! </h1>
     <question-list v-bind:classroom="this.classroom" v-bind:author="this.username" />
   </div>
 </template>
@@ -10,9 +10,10 @@
 import QuestionList from '@/components/QuestionList.vue'
 
 export default {
-  name: 'questions',
+  name: 'classrooms',
   data () {
     return {
+      // TODO: get from cookies instead of route
       classroom: this.$route.params.classroom,
       username: this.$route.query.username
     }

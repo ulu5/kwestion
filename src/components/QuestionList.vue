@@ -34,7 +34,6 @@ export default {
     addQuestion () {
       // TODO: get ID from database
       // TODO: order by upvotes
-      // TODO: display timestamp
       var questionId = this.questions.length + 1
       this.questions.push({
         id: questionId,
@@ -48,7 +47,7 @@ export default {
       this.votes.add(questionId)
       this.newQuestion = ''
     },
-    setBg(questionId, event) {
+    setBg (questionId, event) {
       if (this.votes.has(questionId)) {
         event.target.style.backgroundColor = 'coral'
       } else {
@@ -60,13 +59,10 @@ export default {
       if (this.votes.has(questionId)) {
         this.questions[questionId - 1].votes -= 1
         this.votes.delete(questionId)
-        // TODO: change black
-        console.log(this.$refs)
         this.$refs['upvote_' + questionId][0].style.backgroundColor = 'transparent'
       } else {
         this.questions[questionId - 1].votes += 1
         this.votes.add(questionId)
-        // TODO: change to grayscale
         this.$refs['upvote_' + questionId][0].style.backgroundColor = 'coral'
       }
     },
@@ -116,7 +112,11 @@ export default {
       return interval + ' ' + intervalType + ' ago'
     }
   },
-  // TODO: created fetch classroom questions
+  created () {
+    // TODO: if cookies are not set, redirect
+    // TODO: fetch classroom questions
+    // TODO: open websocket to refresh questions every 30 seconds
+  },
   props: {
     classroom: String,
     author: String
