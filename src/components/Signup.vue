@@ -2,23 +2,21 @@
   <div id="formula">
 
     <h1> {{msg}} </h1>
-    <i>This app was created for demo purposes at Kapolei Elementary School.</i>
+    <i>This app was created for demo purposes for Kapolei Elementary School.</i>
     <br />
     <br />
-    <form @submit="validateInput">
-      <input class="name-input" type="text" placeholder="Name" v-model="username" />
-      <br />
-      <select class="select-input" required v-model="classroom">
-        <option disabled selected value> -- select a class -- </option>
-        <option value="Taeoalii">Taeoalii</option>
-        <option value="Richards">Richards</option>
-        <option value="Herradura">Herradura</option>
-        <option value="Balisacan">Balisacan</option>
-        <option value="Nakatsu">Nakatsu</option>
-      </select>
-      <br />
-      <input class="button" type="submit" value="Sign In" v-on:click="signIn" />
-    </form>
+    <input class="name-input" type="text" placeholder="Name" v-model="username" />
+    <br />
+    <select class="select-input" required v-model="classroom">
+      <option disabled selected value> -- select a class -- </option>
+      <option value="Balisacan">Ms. Balisacan</option>
+      <option value="Herradura">Ms. Herradura</option>
+      <option value="Nakatsu">Mr. Nakatsu</option>
+      <option value="Richards">Ms. Richards</option>
+      <option value="Taeoalii">Ms. Taeoalii</option>
+    </select>
+    <br />
+    <input class="button" type="submit" value="Sign In" v-on:click="signIn" :disabled="this.signInDisabled" />
     <p>
       {{this.showUser()}}
     </p>
@@ -34,11 +32,26 @@ export default {
   name: 'Signup',
   methods: {
     signIn (e) {
-      if (!this.validateInput(e)) return
-
-      // TODO: create user on the backend
-      // TODO: save in cookie
-      this.$router.push({ name: 'classrooms', params: { classroom: this.classroom }, query: { username: this.username } })
+      this.signInDisabled = true
+      console.log(this)
+      // TODO: disable button after pushed
+      if (!this.validateInput(e)) {
+        console.log(e)
+        // this.signInDisabled = false
+        return
+      }
+      // post to backend
+      this.axios.post('/users', {
+        username: this.username,
+        classroom: this.classroom
+      }).then((response) => {
+        console.log(response)
+        // save in cookie
+        this.$cookies.set('userId', response.data.id)
+        this.$cookies.set('username', this.username)
+        this.$cookies.set('classroom', this.classroom)
+        this.$router.push({ name: 'classrooms' })
+      })
     },
     showUser () {
       if (this.username !== '' && this.username !== null) {
@@ -66,13 +79,28 @@ export default {
     }
   },
   created () {
-    // TODO: if cookies are set, redirect
+    // if cookies are set, redirect
+    if (this.$cookies.isKey('userId') &&
+      this.$cookies.isKey('username') &&
+      this.$cookies.isKey('classroom')) {
+      this.$router.push({ name: 'classrooms' })
+      return
+    }
+
+    const requiredCookies = ['userId', 'username', 'classroom']
+
+    requiredCookies.forEach((cookie, idx) => {
+      if (this.$cookies.isKey(cookie)) {
+        this.$cookies.remove(cookie)
+      }
+    })
   },
   data () {
     return {
       username: '',
       classroom: '',
-      errors: []
+      errors: [],
+      signInDisabled: false
     }
   },
   props: {
@@ -127,5 +155,9 @@ export default {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+  }
+  .button :disabled {
+    background-color: gray;
+    color: slategray;
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="question">
-    <h1>Hello {{username}}, welcome to {{classroom}}'s class questions! </h1>
-    <question-list v-bind:classroom="this.classroom" v-bind:author="this.username" />
+    <h1>Hello {{username}}, welcome to <span v-if="classroom == 'Nakatsu'">Mr.</span><span v-else>Ms.</span> {{classroom}}'s class questions! </h1>
+    <question-list />
   </div>
 </template>
 
@@ -13,14 +13,14 @@ export default {
   name: 'classrooms',
   data () {
     return {
-      // TODO: get from cookies instead of route
-      classroom: this.$route.params.classroom,
-      username: this.$route.query.username
+      classroom: this.$cookies.get('classroom'),
+      username: this.$cookies.get('username'),
+      userId: this.$cookies.get('userId')
     }
   },
   created () {
-    if (!this.username || !this.classroom) {
-      this.$route.push({name: 'home'})
+    if (!this.username || !this.classroom || !this.userId) {
+      this.$router.push({name: 'home'})
     }
   },
   components: {

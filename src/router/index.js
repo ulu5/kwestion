@@ -3,9 +3,12 @@ import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 import Home from '../views/Home.vue'
 import Questions from '../views/Questions.vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 Vue.use(VueCookies)
 Vue.use(VueRouter)
+Vue.use(VueAxios, axios)
 
 VueCookies.config('7d')
 
@@ -16,7 +19,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/classrooms/:classroom',
+    path: '/classrooms',
     name: 'classrooms',
     component: Questions
   }

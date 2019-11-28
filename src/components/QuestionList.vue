@@ -32,20 +32,35 @@ export default {
   name: 'QuestionList',
   methods: {
     addQuestion () {
-      // TODO: get ID from database
-      // TODO: order by upvotes
-      var questionId = this.questions.length + 1
-      this.questions.push({
-        id: questionId,
-        question: this.newQuestion,
-        author: this.author,
+      // post to backend
+      this.axios.post('/questions', {
+        userId: this.userId,
         classroom: this.classroom,
-        timestamp: new Date().toISOString(),
-        votes: 1
+        question: this.newQuestion
+      }).then((response) => {
+        console.log(response)
+        // save in cookie
+        this.getQuestions()
       })
-
-      this.votes.add(questionId)
       this.newQuestion = ''
+    },
+    getQuestions () {
+      this.pollQuestions = setInterval(() => {
+        this.axios.get('questions', {
+          params: {
+            userId: this.userId,
+            classroom: this.classroom
+          }
+        })
+          .then((response) => {
+            console.log(response)
+            if (response.status === 200) {
+              this.questions = response.data.questions
+            } else {
+              console.log(response.status)
+            }
+          })
+      }, 15000)
     },
     setBg (questionId, event) {
       if (this.votes.has(questionId)) {
@@ -112,33 +127,32 @@ export default {
       return interval + ' ' + intervalType + ' ago'
     }
   },
-  created () {
-    // TODO: if cookies are not set, redirect
-    // TODO: fetch classroom questions
-    // TODO: open websocket to refresh questions every 30 seconds
+  beforeDestroy () {
+    clearInterval(this.pollQuestions)
   },
-  props: {
-    classroom: String,
-    author: String
+  created () {
+    this.getQuestions()
   },
   data () {
     return {
+      classroom: this.$cookies.get('classroom'),
+      author: this.$cookies.get('username'),
+      userId: this.$cookies.get('userId'),
       newQuestion: '',
       votes: new Set(),
+      pollQuestions: null,
       questions: [
         {
           'id': 1,
           'question': "What's your favorite part of being a software engineer?",
           'timestamp': '2019-11-09T10:43:23Z',
           'author': 'Andrew T.',
-          'classroom': 'taeoalii',
-          'votes': 12
+          'votes': 3
         }, {
           'id': 2,
           'question': "What would you do if you weren't a software engineer?",
           'timestamp': '2019-08-09T10:43:23Z',
           'author': 'Johnny X.',
-          'classroom': 'taeoalii',
           'votes': 5
         }
       ]
