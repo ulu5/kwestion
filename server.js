@@ -47,7 +47,7 @@ const upvoteQuestion = (request, response) => {
       return
     }
     
-    const insertQuery = `INSERT INTO ${tableMap[classroom]["votes"]} (user_id, question_id) VALUES ($1, $2) ON CONFLICT ON CONSTRAINT votes_andrew_pkey DO NOTHING`
+    const insertQuery = `INSERT INTO ${tableMap[classroom]["votes"]} (user_id, question_id) VALUES ($1, $2)`
     pool.query(insertQuery, [userId, questionId], (error, result) => {
       if (error) {
         response.status(500).json({status: 'fail', message: error.message })
