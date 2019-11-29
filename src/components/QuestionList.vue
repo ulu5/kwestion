@@ -21,7 +21,7 @@
         </td>
         <td class="question-vote">
           <button @click="upvote(question.voted, question.id)" class="upvote-button">
-            <img class="upvote-img" src="@/assets/upvote.png" height="25px" @load="setBg(question.voted, $event)" />
+            <img v-bind:class="{'upvoted':(question.voted)}" src="@/assets/upvote.png" height="25px" />
           </button>
           <p class="vote-count">{{ question.votes }}</p>
         </td>
@@ -97,7 +97,6 @@ export default {
         event.target.style.backgroundColor = 'transparent'
       }
     },
-    // TODO: upvote question
     upvote (isVoted, questionId) {
       this.isLoading = true
       // if voted for that question, then +1, else -1
@@ -185,13 +184,13 @@ export default {
           'id': 1,
           'question': "What's your favorite part of being a software engineer?",
           'timestamp': '2019-11-09T10:43:23Z',
-          'author': 'Andrew T.',
+          'author': 'Sample Man',
           'votes': 3
         }, {
           'id': 2,
           'question': "What would you do if you weren't a software engineer?",
           'timestamp': '2019-08-09T10:43:23Z',
-          'author': 'Johnny X.',
+          'author': 'Sample Man',
           'votes': 5
         }
       ]
@@ -237,7 +236,7 @@ export default {
   .upvote-button {
     border: 0px;
   }
-  .upvote-img {
+  .upvoted {
     background-color: coral;
   }
 </style>
