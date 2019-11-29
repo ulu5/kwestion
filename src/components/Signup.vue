@@ -1,6 +1,9 @@
 <template>
   <div id="formula">
-
+    <loading :active.sync="isLoading"
+      :can-cancel="true"
+      :on-cancel="onCancel"
+      :is-full-page="true"></loading>
     <h1> {{msg}} </h1>
     <i>This app was created for demo purposes for Kapolei Elementary School.</i>
     <br />
@@ -27,17 +30,26 @@
 </template>
 
 <script>
-// store the username/classroom locally
+// Import component
+import Loading from 'vue-loading-overlay'
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css'
+
 export default {
   name: 'Signup',
+  components: {
+    Loading
+  },
   methods: {
     signIn (e) {
       this.signInDisabled = true
+      this.isLoading = true
       console.log(this)
       // TODO: disable button after pushed
       if (!this.validateInput(e)) {
         console.log(e)
-        // this.signInDisabled = false
+        this.isLoading = false
+        this.signInDisabled = false
         return
       }
       // post to backend
@@ -100,7 +112,8 @@ export default {
       username: '',
       classroom: '',
       errors: [],
-      signInDisabled: false
+      signInDisabled: false,
+      isLoading: false
     }
   },
   props: {

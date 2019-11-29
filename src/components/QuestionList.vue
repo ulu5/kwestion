@@ -1,5 +1,9 @@
 <template>
   <div id="question-lister">
+    <loading :active.sync="isLoading"
+      :can-cancel="true"
+      :on-cancel="onCancel"
+      :is-full-page="true"></loading>
     <input type="text" class="question-input" placeholder="Ask a question..." v-model="newQuestion" @keyup.enter="addQuestion" />
     <h2>Current Questions</h2>
     <table class="question-table">
@@ -28,16 +32,36 @@
 </template>
 
 <script>
+// Import component
+import Loading from 'vue-loading-overlay'
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css'
+
 export default {
   name: 'QuestionList',
+  components: {
+    Loading
+  },
   methods: {
+    arraysEqual (a, b) {
+      if (a === b) return true
+      if (a == null || b == null) return false
+      if (a.length !== b.length) return false
+
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false
+      }
+      return true
+    },
     addQuestion () {
+      this.isLoading = true
       // post to backend
       this.axios.post('/questions', {
         userId: this.userId,
         classroom: this.classroom,
         question: this.newQuestion
       }).then((response) => {
+        this.isLoading = false
         console.log(response)
         // save in cookie
         this.getQuestions()
@@ -45,22 +69,20 @@ export default {
       this.newQuestion = ''
     },
     getQuestions () {
-      this.pollQuestions = setInterval(() => {
-        this.axios.get('questions', {
-          params: {
-            userId: this.userId,
-            classroom: this.classroom
-          }
-        })
-          .then((response) => {
-            console.log(response)
-            if (response.status === 200) {
-              this.questions = response.data.questions
-            } else {
-              console.log(response.status)
-            }
-          })
-      }, 15000)
+      this.axios.get('questions', {
+        params: {
+          userId: this.userId,
+          classroom: this.classroom
+        }
+      }).then((response) => {
+        console.log(response)
+        if (response.status === 200 && !this.arraysEqual(this.questions, response.data.questions)) {
+          this.questions = response.data.questions
+          this.$forceUpdate()
+        } else {
+          console.log(response.status)
+        }
+      })
     },
     setBg (questionId, event) {
       if (this.votes.has(questionId)) {
@@ -69,6 +91,7 @@ export default {
         event.target.style.backgroundColor = 'transparent'
       }
     },
+    // TODO: upvote question
     upvote (questionId) {
       // if voted for that question, then +1, else -1
       if (this.votes.has(questionId)) {
@@ -131,7 +154,10 @@ export default {
     clearInterval(this.pollQuestions)
   },
   created () {
+    this.isLoading = true
     this.getQuestions()
+    setInterval(this.getQuestions, 15000)
+    this.isLoading = false
   },
   data () {
     return {
@@ -141,6 +167,7 @@ export default {
       newQuestion: '',
       votes: new Set(),
       pollQuestions: null,
+      isLoading: false,
       questions: [
         {
           'id': 1,
