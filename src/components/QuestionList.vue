@@ -20,8 +20,8 @@
           </div>
         </td>
         <td class="question-vote">
-          <button @click="upvote(question.id)" class="upvote-button">
-            <img class="upvote-img" @load="setBg(question.id, $event)" src="@/assets/upvote.png" height="25px" :id="'upvote_' + question.id" :ref="'upvote_' + question.id" />
+          <button @click="upvote(question.voted, question.id)" class="upvote-button">
+            <img class="upvote-img" src="@/assets/upvote.png" height="25px" @load="setBg(question.voted, $event)" />
           </button>
           <p class="vote-count">{{ question.votes }}</p>
         </td>
@@ -68,7 +68,10 @@ export default {
       })
       this.newQuestion = ''
     },
-    getQuestions () {
+    getQuestions (pauseLoading = false) {
+      if (pauseLoading) {
+        this.isLoading = true
+      }
       this.axios.get('questions', {
         params: {
           userId: this.userId,
@@ -82,26 +85,38 @@ export default {
         } else {
           console.log(response.status)
         }
+        if (pauseLoading) {
+          this.isLoading = false
+        }
       })
     },
-    setBg (questionId, event) {
-      if (this.votes.has(questionId)) {
+    setBg (isVoted, event) {
+      if (isVoted) {
         event.target.style.backgroundColor = 'coral'
       } else {
         event.target.style.backgroundColor = 'transparent'
       }
     },
     // TODO: upvote question
-    upvote (questionId) {
+    upvote (isVoted, questionId) {
+      this.isLoading = true
       // if voted for that question, then +1, else -1
-      if (this.votes.has(questionId)) {
-        this.questions[questionId - 1].votes -= 1
-        this.votes.delete(questionId)
-        this.$refs['upvote_' + questionId][0].style.backgroundColor = 'transparent'
+      if (isVoted) {
+        this.axios.post('questions/downvote', {
+          userId: this.userId,
+          classroom: this.classroom,
+          questionId: questionId
+        }).then((response) => {
+          this.getQuestions(true)
+        })
       } else {
-        this.questions[questionId - 1].votes += 1
-        this.votes.add(questionId)
-        this.$refs['upvote_' + questionId][0].style.backgroundColor = 'coral'
+        this.axios.post('questions/upvote', {
+          userId: this.userId,
+          classroom: this.classroom,
+          questionId: questionId
+        }).then((response) => {
+          this.getQuestions(true)
+        })
       }
     },
 
@@ -154,10 +169,8 @@ export default {
     clearInterval(this.pollQuestions)
   },
   created () {
-    this.isLoading = true
-    this.getQuestions()
+    this.getQuestions(true)
     setInterval(this.getQuestions, 15000)
-    this.isLoading = false
   },
   data () {
     return {
@@ -165,7 +178,6 @@ export default {
       author: this.$cookies.get('username'),
       userId: this.$cookies.get('userId'),
       newQuestion: '',
-      votes: new Set(),
       pollQuestions: null,
       isLoading: false,
       questions: [
