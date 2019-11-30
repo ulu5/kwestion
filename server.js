@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const { pool } = require('./myconfig')
 
-const app = express();
+const app = express()
 app.use(serveStatic(__dirname + "/dist"));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -17,7 +17,7 @@ const tableMap = {
     "users": "users_taeoalii",
     "votes": "votes_taeoalii",
     "questions": "questions_taeoalii"
-  } 
+  }
 }
 
 const defaultQuestions = [
