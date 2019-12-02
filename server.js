@@ -22,6 +22,11 @@ const tableMap = {
     "users": "users_richards",
     "votes": "votes_richards",
     "questions": "questions_richards"
+  },
+  "Herradura": {
+    "users": "users_herradura",
+    "votes": "votes_herradura",
+    "questions": "questions_herradura"
   }
 }
 
