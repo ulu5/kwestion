@@ -13,11 +13,11 @@ app.use(cors())
 
 // TODO: create a table map for classrooms to database tables
 const tableMap = {
-  // "Taeoalii": {
-  //   "users": "users_taeoalii",
-  //   "votes": "votes_taeoalii",
-  //   "questions": "questions_taeoalii"
-  // }
+  "Taeoalii": {
+    "users": "users_taeoalii",
+    "votes": "votes_taeoalii",
+    "questions": "questions_taeoalii"
+  }
 }
 
 const defaultQuestions = [
