@@ -32,6 +32,11 @@ const tableMap = {
     "users": "users_balisacan",
     "votes": "votes_balisacan",
     "questions": "questions_balisacan"
+  },
+  "Nakatsu": {
+    "users": "users_nakatsu",
+    "votes": "votes_nakatsu",
+    "questions": "questions_nakatsu"
   }
 }
 
